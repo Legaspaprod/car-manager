@@ -1,26 +1,76 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
+#include <numeric>
 #include "car_manager.h"
 
-std::vector<Car>::iterator CarManager::findCarIterator(const std::string& brand)
-{
-    return std::find_if(
-        cars.begin(),
-        cars.end(),
-        [brand](const Car& car) {
-            return car.brand == brand;
-        }
-    );
+void CarManager::statistics() {
+    auto it = std::max_element(cars.begin(), cars.end(), [](const Car& a, const Car& b) {
+        return a.price < b.price;
+    });
+    if ( it != cars.end()) {
+        std::cout   << "Самая дорогая машина: " 
+                    << it->brand << " " 
+                    << it->model << " " 
+                    << it->price << " руб \n";
+    }
+    auto it2 = std::min_element(cars.begin(), cars.end(), [](const Car& a, Car& b) {
+        return a.price < b.price;
+    });
+    if ( it2 != cars.end()) {
+        std::cout   << "Самая дешевая машина: "
+                    << it2->brand << " "
+                    << it2->model << " "
+                    << it2->price << " руб \n";
+    }
+    if (!cars.empty()) {
+        int it3 = std::accumulate(cars.begin(), cars.end(), 0.0, [](double sum, const Car& car) {
+        return sum + car.price;
+        }) / cars.size();
+        std::cout << "Средняя цена: " << it3 << "\n";
+    }
 }
 
 void CarManager::findByPrice() {
-    std::cout << "Введите минимальную цену: \n";
+    std::cout << "Введите минимальную цену: ";
     int min{};
     std::cin >> min;
-    std::cout << "Введите максимальную цену: \n";
+    std::cout << "Введите максимальную цену: ";
     int max{};
     std::cin >> max;
+
+    bool found = false;
+    int index = 1;
+
+    std::cout   << "\nСписок машин:\n"
+                    << std::left
+                    << std::setw(6) << "№" <<  " | "
+                    << std::setw(4) << "ID" << " | "
+                    << std::setw(20) << "Марка" << " | "
+                    << std::setw(20) << "Модель" << " | "
+                    << std::setw(8) << "Год" << " | "
+                    << std::setw(15) << "Цена" << "\n"
+                    << std::string(72, '-') << "\n";
+
+
+    for (const auto& Car : cars) {
+        if (Car.price >= min && Car.price <= max) {
+            std::cout   << std::left
+                        << std::setw(4) << index++ << " | "
+                        << std::setw(4) << Car.id << " | "
+                        << std::setw(15) << Car.brand << " | "
+                        << std::setw(14) << Car.model << " | "
+                        << std::setw(5) << Car.year << " | "
+                        << std::setw(11) << Car.price << " руб\n";
+        found = true;
+        }
+    }
+
+    if (!found){
+        std::cout << "Не найдено машин!\n";
+    }
+
 }
 
 void CarManager::sortByPriceDescending() {
@@ -70,23 +120,31 @@ void CarManager::loadFromFile() {
 
     Car car;
 
+    int maxid = 0;
+
     while (input >> car.id >>car.brand >> car.model >> car.year >> car.price) {
         cars.push_back(car);
+        if (car.id > maxid) {
+            maxid = car.id;
+        }
     }
-    nextid = car.id + 1;
+    nextid = maxid + 1;
 }
 
-void CarManager::removeCarByBrand() {
-    std::string brand;
+void CarManager::removeCarByID() {
+    int id;
 
-    std::cout << "Введите бренд: \n";
-    std::cin >> brand;
+    std::cout << "Введите ID: ";
+    std::cin >> id;
 
-    auto it = findCarIterator(brand);
+    auto it = std::find_if(cars.begin(), cars.end(),
+        [id](const Car& car) {
+            return car.id == id;
+        });
 
     if (it != cars.end()) {
         cars.erase(it);
-        std::cout << "Машина " << brand << " удалена!\n";
+        std::cout << "Машина " << id << " удалена!\n";
     } else {
         std::cout << "Машина не найдена!\n";
     }
@@ -102,12 +160,23 @@ void CarManager::findCarByBrand() const {
         return car.brand == brand;
         }
     );
-
+    int index = 1;
     if (it != cars.end()) {
-        std::cout   << "Найдена машина: "
-                    << it->brand << " "
-                    << it->model << " "
-                    << it->price << "$\n";
+        std::cout   << "Найдена машина: \n"
+                    << std::left
+                    << std::setw(6) << "№" <<  " | "
+                    << std::setw(4) << "ID" << " | "
+                    << std::setw(20) << "Марка" << " | "
+                    << std::setw(20) << "Модель" << " | "
+                    << std::setw(8) << "Год" << " | "
+                    << std::setw(15) << "Цена" << "\n"
+                    << std::string(72, '-') << "\n"
+                    << std::setw(4) << index++ << " | "
+                    << std::setw(4) << it->id << " | "
+                    << std::setw(15) << it->brand << " | "
+                    << std::setw(14) << it->model << " | "
+                    << std::setw(5) << it->year << " | "
+                    << std::setw(11) << it->price << " руб\n";
     } else {
         std::cout << "Машина не найдена!\n";
     }
@@ -167,18 +236,25 @@ void CarManager::showCars() const {
         }
 
         std::cout   << "\nСписок машин:\n"
-                    << "№  |ID |    Марка    |  Модель  | Год | Цена \n"
-                    << "---------------------------------------------\n";
+                    << std::left
+                    << std::setw(6) << "№" <<  " | "
+                    << std::setw(4) << "ID" << " | "
+                    << std::setw(20) << "Марка" << " | "
+                    << std::setw(20) << "Модель" << " | "
+                    << std::setw(8) << "Год" << " | "
+                    << std::setw(15) << "Цена" << "\n"
+                    << std::string(72, '-') << "\n";
 
         int index = 1;
 
         for (const auto& car : cars) {
-            std::cout   << index++ << ". "
-                        << car.id << " "
-                        << car.brand << " "
-                        << car.model << " "
-                        << car.year << " Цена: "
-                        << car.price << " руб.\n";
+            std::cout   << std::left
+                        << std::setw(4) << index++ << " | "
+                        << std::setw(4) << car.id << " | "
+                        << std::setw(15) << car.brand << " | "
+                        << std::setw(14) << car.model << " | "
+                        << std::setw(5) << car.year << " | "
+                        << std::setw(11) << car.price << " руб\n";
 }
 
         std::cout << "Всего машин: " << cars.size() << "\n\n";    

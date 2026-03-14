@@ -16,12 +16,13 @@ public:
     void addCar();
     void showCars() const;
     void findCarByBrand() const;
-    void removeCarByBrand();
+    void removeCarByID();
     void saveToFile();
     void loadFromFile();
     void sortByPrice();
     void sortByPriceDescending();
     void findByPrice();
+    void statistics();
 };
 
 
