@@ -34,7 +34,7 @@ void CarManager::sortByPrice() {
 
 void CarManager::saveToFile() {
 
-    std::ofstream output("carbase.txt");
+    std::ofstream output("data/carbase.txt");
     if (!output) {
         std::cout << "Ошибка открытия файла\n";
         return;
@@ -50,7 +50,7 @@ void CarManager::saveToFile() {
 void CarManager::loadFromFile() {
     cars.clear();
     
-    std::ifstream input("carbase.txt");
+    std::ifstream input("data/carbase.txt");
 
     if (!input) {
         std::cout << "Файл базы не найден\n";
