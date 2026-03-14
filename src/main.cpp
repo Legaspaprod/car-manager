@@ -28,7 +28,21 @@ int main() {
         } else if (choice == 2) {
             manager.showCars();
         } else if (choice == 3) {
-            manager.findCarByBrand();
+            while (true) {
+                std::cout   << "1. Найти по бренду\n"
+                            << "2. Найти по цене\n"
+                            << "3. Назад\n";
+                
+                std::cin >> choice;
+                
+                if (choice == 1) {
+                    manager.findCarByBrand();
+                } else if (choice == 2) {
+                    
+                } else if (choice == 3) {
+                    break;
+                }
+            }
         } else if (choice == 4) {
             manager.removeCarByBrand();
         } else if (choice == 5) {
@@ -41,7 +55,7 @@ int main() {
                             << "2. Сортировать по убыванию\n"
                             << "3. Назад\n"
                             << "Выбор: ";
-                int choice;
+
                 std::cin >> choice;
 
                 if (choice == 1) {

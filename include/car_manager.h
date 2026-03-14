@@ -8,6 +8,7 @@ class CarManager
 {
 private:
     std::vector<Car> cars;
+    int nextid = 1;
 
     std::vector<Car>::iterator findCarIterator(const std::string& brand);
 
@@ -20,6 +21,7 @@ public:
     void loadFromFile();
     void sortByPrice();
     void sortByPriceDescending();
+    void findByPrice();
 };
 
 

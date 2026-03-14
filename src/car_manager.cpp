@@ -14,6 +14,15 @@ std::vector<Car>::iterator CarManager::findCarIterator(const std::string& brand)
     );
 }
 
+void CarManager::findByPrice() {
+    std::cout << "Введите минимальную цену: \n";
+    int min{};
+    std::cin >> min;
+    std::cout << "Введите максимальную цену: \n";
+    int max{};
+    std::cin >> max;
+}
+
 void CarManager::sortByPriceDescending() {
     std::sort(cars.begin(), cars.end(), [](const Car& a, const Car&b) {
             return a.price > b.price;
@@ -41,9 +50,11 @@ void CarManager::saveToFile() {
     }
 
     for (const auto& car : cars) {
-        output << car.brand << " "
-               << car.model << " "
-               << car.price << "\n";
+        output  << car.id << " "
+                << car.brand << " "
+                << car.model << " "
+                << car.year << " "
+                << car.price << "\n";
     }
 }
 
@@ -59,9 +70,10 @@ void CarManager::loadFromFile() {
 
     Car car;
 
-    while (input >> car.brand >> car.model >> car.price) {
+    while (input >> car.id >>car.brand >> car.model >> car.year >> car.price) {
         cars.push_back(car);
     }
+    nextid = car.id + 1;
 }
 
 void CarManager::removeCarByBrand() {
@@ -110,6 +122,21 @@ void CarManager::addCar() {
         std::cout << "Введите модель: ";
         std::cin >> newCar.model;
 
+        std::cout << "Введите год: ";
+        int year;
+        while (true) {
+            if (!(std::cin >> year)) {
+                std::cout << "Ошибка, вводите только цифры!\n";
+
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Введите цену: ";
+            } else {
+                break;
+            }
+        }
+        newCar.year = year;
+
         std::cout << "Введите цену: ";
         int prices{};
         while (true) {
@@ -124,7 +151,8 @@ void CarManager::addCar() {
             }
         }
         newCar.price = prices;
-
+        
+        newCar.id = nextid++;
         cars.push_back(newCar);
 
         std::cout << "\nМашина добавлена!\n";
@@ -138,15 +166,19 @@ void CarManager::showCars() const {
             return;
         }
 
-        std::cout << "\nСписок машин:\n";
+        std::cout   << "\nСписок машин:\n"
+                    << "№  |ID |    Марка    |  Модель  | Год | Цена \n"
+                    << "---------------------------------------------\n";
 
         int index = 1;
 
         for (const auto& car : cars) {
             std::cout   << index++ << ". "
+                        << car.id << " "
                         << car.brand << " "
-                        << car.model << " Цена: "
-                        << car.price << "$\n";
+                        << car.model << " "
+                        << car.year << " Цена: "
+                        << car.price << " руб.\n";
 }
 
         std::cout << "Всего машин: " << cars.size() << "\n\n";    
