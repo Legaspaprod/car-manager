@@ -33,8 +33,9 @@ int main() {
             while (true) {
                 std::cout   << "1. Найти по бренду\n"
                             << "2. Найти по модели\n"
-                            << "3. Найти по цене\n"
-                            << "4. Назад\n";
+                            << "3. Найти по году\n"
+                            << "4. Найти по цене\n"
+                            << "5. Назад\n";
                 std::cout << "Выбор: ";
                 std::cin >> choice;
                 
@@ -44,9 +45,11 @@ int main() {
                 } else if (choice == 2) {
                     manager.findByModel();
                 } else if (choice == 3) {
+                    manager.findByYear();
+                } else if (choice == 4) {
                     manager.findByPrice();
                     break;
-                } else if (choice == 4) {
+                } else if (choice == 5) {
                     break;
                 }
             }

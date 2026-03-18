@@ -230,10 +230,7 @@ void CarManager::editCar() {
         std::cout << "Ошибка, автомобиль не найден!\n";
         return;
     }
-
-
-
-
+    saveToFile();
 }
 
 void CarManager::statistics() {
@@ -263,7 +260,7 @@ void CarManager::statistics() {
     }
 }
 
-void CarManager::findByModel() {
+void CarManager::findByModel() const {
     std::cout << "Введите модель: ";
     std::string model;
     std::cin >> model;
@@ -294,7 +291,54 @@ void CarManager::findByModel() {
     }
 }
 
-void CarManager::findByPrice() {
+void CarManager::findByYear() const {
+    std::cout   << "Введите диапазон годов от и до\n"
+                << "От: ";
+    int from_year{};
+    if (!(std::cin >> from_year)) {
+        std::cout << "Ошибка, вводите числовое значение!";
+        return;
+    }
+    std::cout << "До: ";
+    int to_year{};
+    if(!(std::cin >> to_year)) {
+        std::cout << "Ошибка, вводите числовое значение!";
+        return;
+    }
+
+    bool found = false;
+    int index = 1;
+
+    std::cout   << "\nСписок машин:\n"
+                    << std::left
+                    << std::setw(6) << "№" <<  " | "
+                    << std::setw(4) << "ID" << " | "
+                    << std::setw(20) << "Марка" << " | "
+                    << std::setw(20) << "Модель" << " | "
+                    << std::setw(8) << "Год" << " | "
+                    << std::setw(15) << "Цена" << "\n"
+                    << std::string(72, '-') << "\n";
+
+
+    for (const auto& Car : cars) {
+        if (Car.year >= from_year && Car.year <= to_year) {
+            std::cout   << std::left
+                        << std::setw(4) << index++ << " | "
+                        << std::setw(4) << Car.id << " | "
+                        << std::setw(15) << Car.brand << " | "
+                        << std::setw(14) << Car.model << " | "
+                        << std::setw(5) << Car.year << " | "
+                        << std::setw(11) << Car.price << " руб\n";
+        found = true;
+        }
+    }
+
+    if (!found){
+        std::cout << "Не найдено машин!\n";
+    }
+}
+
+void CarManager::findByPrice() const {
     std::cout << "Введите минимальную цену: ";
     int min{};
     std::cin >> min;
@@ -407,6 +451,7 @@ void CarManager::removeCarByID() {
     if (it != cars.end()) {
         cars.erase(it);
         std::cout << "Машина " << id << " удалена!\n";
+        saveToFile();
     } else {
         std::cout << "Машина не найдена!\n";
     }
@@ -487,6 +532,7 @@ void CarManager::addCar() {
         cars.push_back(newCar);
 
         std::cout << "\nМашина добавлена!\n";
+        saveToFile();
 
 }
 

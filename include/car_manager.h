@@ -10,8 +10,6 @@ private:
     std::vector<Car> cars;
     int nextid = 1;
 
-    std::vector<Car>::iterator findCarIterator(const std::string& brand);
-
 public:
     void addCar();
     void showCars() const;
@@ -21,8 +19,9 @@ public:
     void loadFromFile();
     void sortByPrice();
     void sortByPriceDescending();
-    void findByPrice();
-    void findByModel();
+    void findByPrice() const;
+    void findByModel() const;
+    void findByYear() const;
     void statistics();
     void editCar();
 };
