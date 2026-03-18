@@ -22,7 +22,9 @@ public:
     void sortByPrice();
     void sortByPriceDescending();
     void findByPrice();
+    void findByModel();
     void statistics();
+    void editCar();
 };
 
 

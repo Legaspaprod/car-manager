@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/CarManager.dir/src/main.cpp.o CMakeFiles/CarManager.dir/src/car_manager.cpp.o -o CarManager 

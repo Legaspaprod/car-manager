@@ -19,7 +19,8 @@ int main() {
                     << "6. Загрузить\n"
                     << "7. Сортировать по цене\n"
                     << "8. Статистика\n"
-                    << "9. Выход\n"
+                    << "9. Изменить машину\n"
+                    << "10. Выход\n"
                     << "Выбор: ";
         
         std::cin >> choice;
@@ -31,8 +32,9 @@ int main() {
         } else if (choice == 3) {
             while (true) {
                 std::cout   << "1. Найти по бренду\n"
-                            << "2. Найти по цене\n"
-                            << "3. Назад\n";
+                            << "2. Найти по модели\n"
+                            << "3. Найти по цене\n"
+                            << "4. Назад\n";
                 std::cout << "Выбор: ";
                 std::cin >> choice;
                 
@@ -40,9 +42,11 @@ int main() {
                     manager.findCarByBrand();
                     break;
                 } else if (choice == 2) {
+                    manager.findByModel();
+                } else if (choice == 3) {
                     manager.findByPrice();
                     break;
-                } else if (choice == 3) {
+                } else if (choice == 4) {
                     break;
                 }
             }
@@ -74,6 +78,8 @@ int main() {
         } else if (choice == 8) {
             manager.statistics();
         } else if (choice == 9) {
+            manager.editCar();
+        } else if (choice == 10) {
             manager.saveToFile();
             std::cout << "Выход из программы. \n";
             break;
