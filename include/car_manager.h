@@ -24,6 +24,9 @@ public:
     void findByYear() const;
     void statistics();
     void editCar();
+    void printCar(const Car& car, int index) const;
+    void printGUI() const;
+    void edit();
 };
 
 

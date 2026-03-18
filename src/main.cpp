@@ -1,6 +1,64 @@
 #include <iostream>
 #include "car_manager.h"
 
+void findMenu(CarManager& manager) {
+    while (true) {
+        std::cout   << "\n--- Поиск ---\n"
+                    << "1. По бренду\n"
+                    << "2. По модели\n"
+                    << "3. По году\n"
+                    << "4. По цене\n"
+                    << "5. Назад\n"
+                    << "Выбор: ";
+
+        int choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1: manager.findCarByBrand(); break;
+            case 2: manager.findByModel(); break;
+            case 3: manager.findByYear(); break;
+            case 4: manager.findByPrice(); break;
+            case 5: return;
+            default: std::cout << "Ошибка\n";
+        }
+    }
+}
+
+void sortMenu(CarManager& manager) {
+    while (true) {
+        std::cout   << "\n--- Сортировка ---\n"
+                    << "1. По возрастанию\n"
+                    << "2. По убыванию\n"
+                    << "3. Назад\n"
+                    << "Выбор: ";
+
+        int choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                manager.sortByPrice();
+                return;
+            case 2:
+                manager.sortByPriceDescending();
+                return;
+            case 3:
+                return;
+            default:
+                std::cout << "Ошибка\n";
+        }
+    }
+}
+
 int main() {
 
     CarManager manager;
@@ -23,75 +81,58 @@ int main() {
                     << "10. Выход\n"
                     << "Выбор: ";
         
-        std::cin >> choice;
-
-        if (choice == 1) {
-            manager.addCar();
-        } else if (choice == 2) {
-            manager.showCars();
-        } else if (choice == 3) {
-            while (true) {
-                std::cout   << "1. Найти по бренду\n"
-                            << "2. Найти по модели\n"
-                            << "3. Найти по году\n"
-                            << "4. Найти по цене\n"
-                            << "5. Назад\n";
-                std::cout << "Выбор: ";
-                std::cin >> choice;
-                
-                if (choice == 1) {
-                    manager.findCarByBrand();
-                    break;
-                } else if (choice == 2) {
-                    manager.findByModel();
-                } else if (choice == 3) {
-                    manager.findByYear();
-                } else if (choice == 4) {
-                    manager.findByPrice();
-                    break;
-                } else if (choice == 5) {
-                    break;
-                }
-            }
-        } else if (choice == 4) {
-            manager.removeCarByID();
-        } else if (choice == 5) {
-            manager.saveToFile();
-        } else if (choice == 6) {
-            manager.loadFromFile();
-        } else if (choice == 7) {
-            while (true) {
-                std::cout   << "1. Сортировать по возрастанию\n"
-                            << "2. Сортировать по убыванию\n"
-                            << "3. Назад\n"
-                            << "Выбор: ";
-
-                std::cin >> choice;
-
-                if (choice == 1) {
-                    manager.sortByPrice();
-                    break;
-                } else if (choice == 2) {
-                    manager.sortByPriceDescending();
-                    break;
-                } else if (choice == 3) {
-                    break;
-                }
-            }
-        } else if (choice == 8) {
-            manager.statistics();
-        } else if (choice == 9) {
-            manager.editCar();
-        } else if (choice == 10) {
-            manager.saveToFile();
-            std::cout << "Выход из программы. \n";
-            break;
-        } else {
-            std::cout << "Выберете число от 1 до 9.\n";
+        
+        if (!(std::cin >> choice)) {
+            std::cout << "Ошибка, вводите числовое значение!";
             std::cin.clear();
             std::cin.ignore(10000, '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                manager.addCar();
+                break;
+
+            case 2:
+                manager.showCars();
+                break;
+
+            case 3:
+                findMenu(manager);
+                break;
+
+            case 4:
+                manager.removeCarByID();
+                break;
+
+            case 5:
+                manager.saveToFile();
+                break;
+
+            case 6:
+                manager.loadFromFile();
+                break;
+
+            case 7:
+                sortMenu(manager);
+                break;
+
+            case 8:
+                manager.statistics();
+                break;
+
+            case 9:
+                manager.editCar();
+                break;
+
+            case 10:
+                manager.saveToFile();
+                std::cout << "Выход.\n";
+                return 0;
+
+            default:
+                std::cout << "Выберите 1–10\n";
         }
     }
-
-    return 0;
 }
