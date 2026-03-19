@@ -3,9 +3,26 @@
 #include <fstream>
 #include <iomanip>
 #include <numeric>
+#include <sstream>
 #include "car_manager.h"
 
-void CarManager::printGUI() const {
+void CarManager::printAllCars(const std::vector<Car>& list) const {
+    if (list.empty()) {
+        std::cout << "Ничего не найдено!\n";
+        return;
+    }
+
+    int index = 1;
+    printHeader();
+
+    for (const auto& car : list) {
+        printCar(car, index++);
+    }
+
+    std::cout << "Всего " << list.size() << " автомобилей." << "\n";
+}
+
+void CarManager::printHeader() const {
     std::cout   << "\nСписок машин:\n"
                 << std::left
                 << std::setw(6) << "№" <<  " | "
@@ -19,7 +36,7 @@ void CarManager::printGUI() const {
 
 void CarManager::printCar(const Car& car, int index) const {
     std::cout   << std::left
-                << std::setw(4) << index++ << " | "
+                << std::setw(4) << index << " | "
                 << std::setw(4) << car.id << " | "
                 << std::setw(15) << car.brand << " | "
                 << std::setw(14) << car.model << " | "
@@ -44,7 +61,7 @@ void CarManager::editCar() {
         if (car.id == id) {
             while (true) {
                 std::cout << "\nРедактирование машины ID: " << car.id << "\n";
-                std::cout << "1. Марка\n2. Модель\n3. Год\n4. Цена\n5. Назад\n";
+                std::cout << "1. Марка\n2. Модель\n3. Год\n4. Цена\n5. Назад\nВыбор: ";
 
                 int choice;
                 if (!(std::cin >> choice)) {
@@ -55,13 +72,17 @@ void CarManager::editCar() {
                 }
                 if (choice == 1) {
                     std::cout << "Новая марка: ";
-                    std::cin >> car.brand;
-                    printGUI();
+                    std::cin.clear();
+                    std::cin.ignore(10000, '\n');
+                    std::getline(std::cin, car.brand);
+                    printHeader();
                     printCar(car, index++);
                 } else if (choice == 2) {
                     std::cout << "Новая модель: ";
-                    std::cin >> car.model;
-                    printGUI();
+                    std::cin.clear();
+                    std::cin.ignore(10000, '\n');
+                    std::getline(std::cin, car.model);
+                    printHeader();
                     printCar(car, index++);
                 } else if (choice == 3) {
                     std::cout << "Новый год: ";
@@ -73,7 +94,7 @@ void CarManager::editCar() {
                         continue;
                     }
                     car.year = year;
-                    printGUI();
+                    printHeader();
                     printCar(car, index++);
                 } else if (choice == 4) {
                     std::cout << "Новая цена: ";
@@ -85,13 +106,14 @@ void CarManager::editCar() {
                         continue;
                     }
                     car.price = price;
-                    printGUI();
+                    printHeader();
                     printCar(car, index++);
                 } else if (choice == 5) {
                     break;
                 }
             }
             found = true;
+            saveToFile();
         }
     }
 
@@ -129,24 +151,19 @@ void CarManager::statistics() {
 
 void CarManager::findByModel() const {
     std::cout << "Введите модель: ";
+    std::cin.clear();
+    std::cin.ignore(10000, '\n');
     std::string model;
-    std::cin >> model;
 
-    bool found = false;
-    int index = 1;
+    std::getline(std::cin, model);
 
-    printGUI();
-
+    std::vector<Car> result;
     for (const auto& car : cars) {
         if (car.model == model) {
-            printCar(car, index++);
-            found = true;
+            result.push_back(car);
         }
     }
-
-    if (!found){
-        std::cout << "Не найдено машин!\n";
-    }
+    printAllCars(result);
 }
 
 void CarManager::findByYear() const {
@@ -164,21 +181,13 @@ void CarManager::findByYear() const {
         return;
     }
 
-    bool found = false;
-    int index = 1;
-
-    printGUI();
-
+    std::vector<Car> result;
     for (const auto& car : cars) {
         if (car.year >= from_year && car.year <= to_year) {
-            printCar(car, index++);
-            found = true;
+            result.push_back(car);
         }
     }
-
-    if (!found){
-        std::cout << "Не найдено машин!\n";
-    }
+    printAllCars(result);
 }
 
 void CarManager::findByPrice() const {
@@ -189,23 +198,13 @@ void CarManager::findByPrice() const {
     int max{};
     std::cin >> max;
 
-    bool found = false;
-    int index = 1;
-
-    printGUI();
-
-
+    std::vector<Car> result;
     for (const auto& car : cars) {
         if (car.price >= min && car.price <= max) {
-            printCar(car, index++);
-            found = true;
+            result.push_back(car);
         }
     }
-
-    if (!found){
-        std::cout << "Не найдено машин!\n";
-    }
-
+    printAllCars(result);
 }
 
 void CarManager::sortByPriceDescending() {
@@ -235,11 +234,11 @@ void CarManager::saveToFile() {
     }
 
     for (const auto& car : cars) {
-        output  << car.id << " "
-                << car.brand << " "
-                << car.model << " "
-                << car.year << " "
-                << car.price << "\n";
+        output      << car.id << "|"
+                    << car.brand << "|"
+                    << car.model << "|"
+                    << car.year << "|"
+                    << car.price << "\n";
     }
 }
 
@@ -252,17 +251,36 @@ void CarManager::loadFromFile() {
         std::cout << "Файл базы не найден\n";
         return;
     }
-
-    Car car;
-
     int maxid = 0;
+    std::string line;
 
-    while (input >> car.id >>car.brand >> car.model >> car.year >> car.price) {
+    while (std::getline(input, line)) {
+        
+        std::stringstream ss(line);
+        std::string temp;
+
+        Car car;
+
+        std::getline(ss, temp, '|');
+        car.id = std::stoi(temp);
+        
+
+        std::getline(ss, car.brand, '|');
+        std::getline(ss, car.model, '|');
+
+        std::getline(ss, temp, '|');
+        car.year = std::stoi(temp);
+
+        std::getline(ss, temp, '|');
+        car.price = std::stoi(temp);
+
         cars.push_back(car);
+
         if (car.id > maxid) {
             maxid = car.id;
         }
     }
+
     nextid = maxid + 1;
 }
 
@@ -289,34 +307,30 @@ void CarManager::removeCarByID() {
 void CarManager::findCarByBrand() const {
     std::string brand;
 
-    std::cout << "Введите бренд: \n";
-    std::cin >> brand;
-
-    bool found = false;
-    int index = 1;
-
-    printGUI();
-
+    std::cout << "Введите бренд: ";
+    std::cin.clear();
+    std::cin.ignore(10000, '\n');
+    std::getline(std::cin, brand);
+    
+    std::vector<Car> result;
     for (const auto& car : cars) {
         if (car.brand == brand) {
-            printCar(car, index++);
-            found = true;
+            result.push_back(car);
         }
     }
-
-    if (!found){
-        std::cout << "Не найдено машин!\n";
-    }
+    printAllCars(result);
 }
 
 void CarManager::addCar() {
         Car newCar;
 
         std::cout << "Введите бренд: ";
-        std::cin >> newCar.brand;
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+        std::getline(std::cin, newCar.brand);
 
         std::cout << "Введите модель: ";
-        std::cin >> newCar.model;
+        std::getline(std::cin, newCar.model);
 
         std::cout << "Введите год: ";
         int year;
@@ -358,17 +372,5 @@ void CarManager::addCar() {
 
 void CarManager::showCars() const {
 
-    if (cars.empty()) {
-        std::cout << "Список машин пуст! \n";
-        return;
-    }
-
-    int index = 1;
-    printGUI();
-    for (const auto& car : cars) {
-        printCar(car, index++);
-    }
-
-
-    std::cout << "Всего машин: " << cars.size() << "\n\n";    
+    printAllCars(cars); 
 }

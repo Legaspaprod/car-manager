@@ -25,8 +25,8 @@ public:
     void statistics();
     void editCar();
     void printCar(const Car& car, int index) const;
-    void printGUI() const;
-    void edit();
+    void printHeader() const;
+    void printAllCars(const std::vector<Car>& list) const;
 };
 
 
