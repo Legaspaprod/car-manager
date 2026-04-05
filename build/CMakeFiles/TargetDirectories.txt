@@ -1,3 +1,0 @@
-/home/buyvol/Рабочий стол/GitHub/car-manager/build/CMakeFiles/CarManager.dir
-/home/buyvol/Рабочий стол/GitHub/car-manager/build/CMakeFiles/edit_cache.dir
-/home/buyvol/Рабочий стол/GitHub/car-manager/build/CMakeFiles/rebuild_cache.dir
