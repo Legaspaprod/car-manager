@@ -11,10 +11,10 @@ private:
     int nextid = 1;
 
 public:
-    void addCar();
-    void showCars() const;
+    void addCar(); // 1
+    void showCars() const; // 2
     void findCarByBrand() const;
-    void removeCarByID();
+    void removeCarByID(); // 3
     void saveToFile();
     void loadFromFile();
     void sortByPrice();
@@ -27,6 +27,11 @@ public:
     void printCar(const Car& car, int index) const;
     void printHeader() const;
     void printAllCars(const std::vector<Car>& list) const;
+
+    void addCar(const Car& car);
+    Car* findCarById(int id); // 4
+    bool removeCarById(int id);
+    std::vector<Car> getAllCars() const;
 };
 
 

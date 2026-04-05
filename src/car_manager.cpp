@@ -284,26 +284,6 @@ void CarManager::loadFromFile() {
     nextid = maxid + 1;
 }
 
-void CarManager::removeCarByID() {
-    int id;
-
-    std::cout << "Введите ID: ";
-    std::cin >> id;
-
-    auto it = std::find_if(cars.begin(), cars.end(),
-        [id](const Car& car) {
-            return car.id == id;
-        });
-
-    if (it != cars.end()) {
-        cars.erase(it);
-        std::cout << "Машина " << id << " удалена!\n";
-        saveToFile();
-    } else {
-        std::cout << "Машина не найдена!\n";
-    }
-}
-
 void CarManager::findCarByBrand() const {
     std::string brand;
 
@@ -321,56 +301,40 @@ void CarManager::findCarByBrand() const {
     printAllCars(result);
 }
 
-void CarManager::addCar() {
-        Car newCar;
-
-        std::cout << "Введите бренд: ";
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::getline(std::cin, newCar.brand);
-
-        std::cout << "Введите модель: ";
-        std::getline(std::cin, newCar.model);
-
-        std::cout << "Введите год: ";
-        int year;
-        while (true) {
-            if (!(std::cin >> year)) {
-                std::cout << "Ошибка, вводите только цифры!\n";
-
-                std::cin.clear();
-                std::cin.ignore(10000, '\n');
-                std::cout << "Введите цену: ";
-            } else {
-                break;
-            }
-        }
-        newCar.year = year;
-
-        std::cout << "Введите цену: ";
-        int prices{};
-        while (true) {
-            if (!(std::cin >> prices)) {
-                std::cout << "Ошибка, вводите только цифры!\n";
-
-                std::cin.clear();
-                std::cin.ignore(10000, '\n');
-                std::cout << "Введите цену: ";
-            } else {
-                break;
-            }
-        }
-        newCar.price = prices;
-        
-        newCar.id = nextid++;
-        cars.push_back(newCar);
-
-        std::cout << "\nМашина добавлена!\n";
-        saveToFile();
-
-}
-
 void CarManager::showCars() const {
 
     printAllCars(cars); 
 }
+
+void CarManager::addCar(const Car& car) {
+    Car newCar = car;
+    newCar.id = nextid++;
+    cars.push_back(newCar);
+}
+
+Car* CarManager::findCarById(int id) {
+    for (auto& car : cars) {
+        if (car.id == id) {
+            return &car;
+        }
+    }
+    return nullptr;
+}
+
+bool CarManager::removeCarById(int id) {
+    auto it = std::find_if(cars.begin(), cars.end(),
+        [id](const Car& car) {
+            return car.id == id;
+        });
+
+    if (it != cars.end()) {
+        cars.erase(it);
+        return true;
+    }
+    return false;
+}
+
+std::vector<Car> CarManager::getAllCars() const {
+    return cars;
+}
+

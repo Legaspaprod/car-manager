@@ -8,7 +8,8 @@ void findMenu(CarManager& manager) {
                     << "2. По модели\n"
                     << "3. По году\n"
                     << "4. По цене\n"
-                    << "5. Назад\n"
+                    << "5. По ID\n"
+                    << "6. Назад\n"
                     << "Выбор: ";
 
         int choice;
@@ -23,7 +24,15 @@ void findMenu(CarManager& manager) {
             case 2: manager.findByModel(); break;
             case 3: manager.findByYear(); break;
             case 4: manager.findByPrice(); break;
-            case 5: return;
+            case 5: {
+                std::cin.ignore();
+                std::cout << "Введите ID: ";
+                int id;
+                std::cin >> id;
+                manager.findCarById(id);
+                break;
+            }
+            case 6: return;
             default: std::cout << "Ошибка\n";
         }
     }
@@ -90,49 +99,103 @@ int main() {
         }
 
         switch (choice) {
-            case 1:
-                manager.addCar();
-                break;
+            case 1: {
+                Car car;
 
-            case 2:
+                std::cin.ignore();
+                std::cout << "Введите бренд: ";
+                std::getline(std::cin, car.brand);
+
+                std::cout << "Введите модель: ";
+                std::getline(std::cin, car.model);
+
+                std::cout << "Введите год: ";
+                std::cin >> car.year;
+
+                std::cout << "Введите цену: ";
+                std::cin >> car.price;
+
+                manager.addCar(car);
+                manager.saveToFile();
+
+                std::cout << "Машина добавлена!\n";
+                break;
+            }
+
+            case 2: {
                 manager.showCars();
                 break;
-
-            case 3:
+            }
+            case 3: {
                 findMenu(manager);
                 break;
+            }
+            case 4: {
+                int id;
+                std::cout << "Введите ID: ";
+                std::cin >> id;
 
-            case 4:
-                manager.removeCarByID();
+                if (manager.removeCarById(id)) {
+                    std::cout << "Удалено\n";
+                    manager.saveToFile();
+                } else {
+                    std::cout << "Не найдено\n";
+                }
                 break;
-
-            case 5:
+            }
+            case 5: {
                 manager.saveToFile();
                 break;
-
-            case 6:
+            }
+            case 6: {
                 manager.loadFromFile();
                 break;
-
-            case 7:
+            }
+            case 7: {
                 sortMenu(manager);
                 break;
-
-            case 8:
+            }
+            case 8: {
                 manager.statistics();
                 break;
+            }
+            case 9: {
+                int id;
+                std::cout << "Введите ID: ";
+                std::cin >> id;
 
-            case 9:
-                manager.editCar();
+                Car* car = manager.findCarById(id);
+
+                if (!car) {
+                   std::cout << "Не найдено\n";
+                    break;
+                }
+
+                std::cin.ignore();
+
+                std::cout << "Новая марка: ";
+                std::getline(std::cin, car->brand);
+
+                std::cout << "Новая модель: ";
+                std::getline(std::cin, car->model);
+
+                std::cout << "Новый год: ";
+                std::cin >> car->year;
+
+                std::cout << "Новая цена: ";
+                std::cin >> car->price;
+
+                manager.saveToFile();
                 break;
-
-            case 10:
+            }
+            case 10: {
                 manager.saveToFile();
                 std::cout << "Выход.\n";
                 return 0;
-
-            default:
+            }
+            default: {
                 std::cout << "Выберите 1–10\n";
+            }
         }
     }
 }
