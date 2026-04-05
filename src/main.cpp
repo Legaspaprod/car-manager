@@ -1,5 +1,7 @@
 #include <iostream>
 #include "car_manager.h"
+#include "utils.h"
+
 
 void findMenu(CarManager& manager) {
     while (true) {
@@ -87,16 +89,10 @@ int main() {
                     << "7. Сортировать по цене\n"
                     << "8. Статистика\n"
                     << "9. Изменить машину\n"
-                    << "10. Выход\n"
-                    << "Выбор: ";
+                    << "10. Выход\n";
         
         
-        if (!(std::cin >> choice)) {
-            std::cout << "Ошибка, вводите числовое значение!";
-            std::cin.clear();
-            std::cin.ignore(10000, '\n');
-            continue;
-        }
+        choice = safeInputInt("Выбор: ");
 
         switch (choice) {
             case 1: {
