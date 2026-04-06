@@ -1,5 +1,6 @@
 // utils.cpp
 #include "utils.h"
+
 #include <iostream>
 #include <limits>
 
@@ -15,6 +16,9 @@ int safeInputInt(const std::string& prompt) {
 }
 
 std::string safeInputString(const std::string& prompt) {
+    std::string value;
     std::cout << prompt;
-    return "";
+    std::cin.ignore(10000, '\n');
+    std::getline(std::cin, value);
+    return value;
 }

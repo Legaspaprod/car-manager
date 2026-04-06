@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/buyvol/Рабочий стол/GitHub/car-manager/src/car_manager.cpp" "CMakeFiles/CarManager.dir/src/car_manager.cpp.o" "gcc" "CMakeFiles/CarManager.dir/src/car_manager.cpp.o.d"
+  "/home/buyvol/Рабочий стол/GitHub/car-manager/src/database.cpp" "CMakeFiles/CarManager.dir/src/database.cpp.o" "gcc" "CMakeFiles/CarManager.dir/src/database.cpp.o.d"
   "/home/buyvol/Рабочий стол/GitHub/car-manager/src/main.cpp" "CMakeFiles/CarManager.dir/src/main.cpp.o" "gcc" "CMakeFiles/CarManager.dir/src/main.cpp.o.d"
   "/home/buyvol/Рабочий стол/GitHub/car-manager/src/utils.cpp" "CMakeFiles/CarManager.dir/src/utils.cpp.o" "gcc" "CMakeFiles/CarManager.dir/src/utils.cpp.o.d"
   )

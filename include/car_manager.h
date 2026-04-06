@@ -2,38 +2,52 @@
 #define CAR_MANAGER_H
 
 #include <vector>
+#include <string>
 #include "car.h"
+#include "database.h"
 
-class CarManager
-{
+class CarManager {
 private:
     std::vector<Car> cars;
     int nextid = 1;
+    Database& db;
 
 public:
-    void addCar(); // 1
-    void showCars() const; // 2
+    explicit CarManager(Database& database);
+    ~CarManager();
+    
+    // Работа с БД
+    void loadFromDB();
+    void saveToDB();
+    
+    // CRUD операции
+    void addCar(const Car& car);
+    void editCar(int id, int field, const std::string& value);
+    void editCar(int id, int field, int value);
+    bool removeCarById(int id);
+    void findCarById(int id) const;
+    
+    // Поиск и фильтрация
     void findCarByBrand() const;
-    void removeCarByID(); // 3
-    void saveToFile();
-    void loadFromFile();
-    void sortByPrice();
-    void sortByPriceDescending();
-    void findByPrice() const;
     void findByModel() const;
     void findByYear() const;
-    void statistics();
-    void editCar();
-    void printCar(const Car& car, int index) const;
-    void printHeader() const;
+    void findByPrice() const;
+    
+    // Отображение
+    void showCars() const;
     void printAllCars(const std::vector<Car>& list) const;
-
-    void addCar(const Car& car);
-    Car* findCarById(int id); // 4
-    bool removeCarById(int id);
+    
+    // Сортировка и статистика
+    void sortByPrice();
+    void sortByPriceDescending();
+    void statistics();
+    
+    // Вспомогательные
     std::vector<Car> getAllCars() const;
+
+private:
+    void printHeader() const;
+    void printCar(const Car& car, int index) const;
 };
-
-
 
 #endif

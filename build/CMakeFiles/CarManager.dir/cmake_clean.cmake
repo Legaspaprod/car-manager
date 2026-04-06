@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/CarManager.dir/src/car_manager.cpp.o"
   "CMakeFiles/CarManager.dir/src/car_manager.cpp.o.d"
+  "CMakeFiles/CarManager.dir/src/database.cpp.o"
+  "CMakeFiles/CarManager.dir/src/database.cpp.o.d"
   "CMakeFiles/CarManager.dir/src/main.cpp.o"
   "CMakeFiles/CarManager.dir/src/main.cpp.o.d"
   "CMakeFiles/CarManager.dir/src/utils.cpp.o"

@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I"/home/buyvol/Рабочий стол/GitHub/car-manager/include"
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS = -std=gnu++20
 
